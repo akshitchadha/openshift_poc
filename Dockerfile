@@ -2,7 +2,7 @@ FROM alpine/git as clone (1)
 WORKDIR /app
 RUN git clone https://github.com/akshitchadha/spring-boot-docker-complete.git
 
-FROM maven:3.5-jdk-8-alpine as builder
+FROM maven:8-jdk-alpine as builder
 WORKDIR /app
 COPY pom.xml .
 COPY src ./src
