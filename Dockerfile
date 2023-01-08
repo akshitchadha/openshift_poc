@@ -8,7 +8,8 @@ COPY pom.xml .
 COPY src ./src
 RUN mvn clean package -DskipTest
 
-FROM openjdk:8-jre-alpine
+FROM openjdk:8-jdk-alpine
 WORKDIR /app
-COPY --from=builder /app/target/spring-boot-docker-complete-*.jar /spring-boot-docker-complete.jar
-CMD ["java -jar spring-boot-docker-complete.jar"]
+ARG JAR_FILE=target/*.jar
+COPY ${JAR_FILE} app.jar
+ENTRYPOINT ["java","-jar","/app.jar"]
