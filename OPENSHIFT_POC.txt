@@ -1,0 +1,422 @@
+	1 )download 
+ VirtualBox-5.2.44-139111-Win.exe
+using url 
+https://download.virtualbox.org/virtualbox/5.2.44/VirtualBox-5.2.44-139111-Win.exe
+
+
+2)
+download 
+
+minishift-1.16.1
+minishit
+://objects.githubusercontent.com/github-production-release-asset-2e65be/62728051/9fc7d9d2-44bd-11e8-9332-c9c138fb0700?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20221120%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20221120T104828Z&X-Amz-Expires=300&X-Amz-Signature=cd14f9f223a28f6097e98bb4f67790297d89e91f31910c0b390c0c6c36f17778&X-Amz-SignedHeaders=host&actor_id=0&key_id=0&repo_id=62728051&response-content-disposition=attachment%3B%20filename%3Dminishift-1.16.1-windows-amd64.zip&response-content-type=application%2Foctet-stream
+
+
+extra the zip place it in c drive 
+
+
+open cmd inisde extracted folder 
+
+3)
+amd give below commanand to  start and configure openshift  
+
+
+minishift.exe  start --vm-driver virtualbox
+
+4) to set up path of openshift cli
+
+give below command first 
+
+  minishift oc-env
+
+you will see a output like 
+SET PATH=C:\Users\AMAY-PC\.minishift\cache\oc\v3.9.0\windows;%PATH%
+
+execute the above ouput to set the path 
+
+5) to log in openshift cli as admin   
+
+this will have access to all the project in the openshift
+
+
+6) to login as developer run command 
+
+oc login -u developer -p developer
+
+7) to get current user command 
+
+oc whoami
+
+
+8) to generate token for current user use whoami commanand with -t
+
+oc whoami -t 
+
+output like  
+
+k_HRdYHt4IcxMF66NHSkXOLTf_4nSvWqD2UoFLlO1ms
+
+
+with this token you take access openshift using rest api 
+
+example 
+
+curl -k https://192.168.99.100:8443/oapi/v1/projects -H 
+"Authorization: Bearer k_HRdYHt4IcxMF66NHSkXOLTf_4nSvWqD2UoFLlO1ms"
+
+ouput  like
+
+
+{
+  "kind": "ProjectList",
+  "apiVersion": "v1",
+  "metadata": {
+    "selfLink": "/oapi/v1/projects"
+  },
+  "items": [
+    {
+      "metadata": {
+        "name": "myproject",
+        "selfLink": "/oapi/v1/projects/myproject",
+        "uid": "8a9d6f29-68c2-11ed-9b53-ee4f61d1db65",
+        "resourceVersion": "1237",
+        "creationTimestamp": "2022-11-20T11:00:27Z",
+        "annotations": {
+          "openshift.io/description": "Initial developer project",
+          "openshift.io/display-name": "My Project",
+          "openshift.io/requester": "developer",
+          "openshift.io/sa.scc.mcs": "s0:c8,c7",
+          "openshift.io/sa.scc.supplemental-groups": "1000070000/10000",
+          "openshift.io/sa.scc.uid-range": "1000070000/10000"
+        }
+      },
+      "spec": {
+        "finalizers": [
+          "openshift.io/origin",
+          "kubernetes"
+        ]
+      },
+      "status": {
+        "phase": "Active"
+      }
+    }
+  ]
+}
+
+
+
+9) deployment and service  name must be unique  in an openshift 
+
+10 ) projects are made over top of kubernetes name space . openshift prefix a name of your choice to object you create in a kubernates namespace
+thereby providing  some basic grouping functionality for resource in openshift
+
+user create a project and deploy application he donot have worry about managing namespace
+
+generally when in a micoservice enviroment  one name space is taken up by one microservice
+
+
+11) three types of user in openshift 
+
+service account ( use microservice for internal communication among themself) , regular user (developer and  ) , system users( cluster management team like devops) 
+
+
+auth server is known as oauth server
+
+12 ) to get all users use command 
+
+oc get users
+
+
+13) command to make a user cluster admin   
+oc adm policy add-cluster-role-to-user  cluser-admin  developer
+
+                                                      usernaME
+
+
+14 OPENSHIFT has built in a integration to source code management  tools like github , bitbucket etc 
+
+
+Openshift   -----> create build ----> download the code  from bitbucket or github ---> build docker image  -----> push it to docker registry ------->
+                                                                                                                                                 |
+                     in ||                                                                                                                       |
+					                                                                                                                             |
+					 also                                                                                                                        v
+                   create deploy object------------------------------------------------------------------------------------------------------------> deploynment object  deploys 
+				                                                                                                                                  application using 
+																																				  image from docker 
+																																				  registry to build in 
+																																				   kubernates cluster 
+																																				   making applicationn 
+																																				   available to end user
+
+
+
+
+15 ) To deploy a sample pom driven maven project on openshift 
+
+
+login to openshift as developer ----->  then creat a project -------->	fill the fields and click on create project 
+------>  then click on browese the catalog -----> languae ----> java ----> wildfly_server----> give the  link of your gith respository  and application name
+----> then click on create ---> then close
+
+
+now go on  to Builds  ---> Builds ---> you will a java maven build is running under project name -------
+
+under ---- history tab see logss
+
+
+in logs project first get cloned and followed by maven build the image is pushed to in built regiustry
+
+
+16) key vALUE IN YAML
+
+format 
+key: value
+   --
+space after colon is very important
+Fruit: apple
+
+
+array /list in yaml
+
+
+- represent that orange belongs to array fruit
+
+Fruits: 
+
+-   orange
+-   apple
+-   banana
+
+
+Vegetables: 
+
+-     carrot
+-     tomato   
+
+
+
+
+Dictionary /map
+
+Banana: 
+     calories: 105
+	 Fat: 0.4g
+	 carbs: 27g
+	 
+----
+these spaces must be same 	 
+
+
+
+exmple of advance yaml 
+
+Fruits:
+   - Bananna:
+         calories: 105
+         Fat: 0.4g
+         carbs: 27g
+         
+   - Grape:
+         calories: 62
+         Fat: 0.3
+         carbs: 16g                
+
+
+to comment in yaml use #
+
+
+
+17 ) OPENSHIFT BUILD STARTERGY
+
+1) DOCKER Builds
+
+You require a docker file in it
+
+
+
+2) source to image (S2I) build stratergy
+
+
+
+connect github guide
+https://kbroman.org/github_tutorial/pages/first_time.html
+
+
+
+17 ) containeners ----------> pods -------------> replicas controller ( agrregation of pods)  --------> replica controller+ application life cycle
+                                                                                                        management tools like rollback etc
+																										  deployment controller                                    
+																										  
+																										  
+																										  
+18) deployment statergies 
+1) recreate : destroy all previous and create all new
+2)  rolling update ( default deployment ) : destroy old version bring another up one by one 
+3) blue green : deploy green and blue version together  we test green version . if green is working ok then we switch 
+access to green from blue
+4) A / b deployment : in this stratergy we test new version of application in production environemnt  but in a limited way by splitting
+ traffic to only  a small % of users 
+ 
+ 
+18) trigger build 
+oc rollout latest dc/simple-webapp-dock
+                   deployment name 
+				   
+				   
+				   
+19 ) history of builds 				   
+oc rollout history  dc/simple-webapp-docker
+                     deployment name 
+
+20)  see detailed information about the deployment use 
+oc rollout describe  dc/simple webapp-docker	
+                      deployment name 
+
+21 roll back command 
+
+ oc rollout undo dc/simple-webapp-docker
+ 
+                  deployment name 				
+
+
+22) example of docker  build startergy   on wildfly_server----
+
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  creationTimestamp: '2022-12-04T16:54:19Z'
+  name: java1
+  resourceVersion: '99012'
+  selfLink: /apis/build.openshift.io/v1/namespaces/were/buildconfigs/java1-docker
+  uid: 4b991102-73f4-11ed-9340-e6d0a78387e5
+spec:
+  failedBuildsHistoryLimit: 5
+  nodeSelector: null
+  output:
+    to:
+      kind: ImageStreamTag
+      name: 'akshit-chadha-docker-poc:latest'
+  postCommit: {}
+  resources: {}
+  runPolicy: Serial
+  source:
+    git:
+      ref: master
+      uri: 'https://github.com/akshitchadha/spring-boot-docker-complete.git'
+    type: Git
+  strategy:
+    dockerStrategy: {}
+    type: Docker
+  successfulBuildsHistoryLimit: 5
+  triggers:
+    - type: ConfigChange
+    - generic:
+        secret: 3cb3d60cb1a1f79a
+      type: Generic
+    - github:
+        secret: eccc1c5ac7c4f965
+      type: GitHub
+status:
+  lastVersion: 7
+				   
+				   
+				   
+23) example of deployment config				   
+				   
+				   
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  namespace: achadha1995-dev
+  name: 'java1'
+spec:
+  selector: {}
+  replicas: 3
+  template:
+    metadata:
+      labels: { app: java1}
+    spec:
+      containers:
+        - name: java1
+          image: >-
+            image-registry.openshift-image-registry.svc:5000/achadha1995-dev/akshit-chadha-docker-poc:latest
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+  strategy:
+    type: Rolling
+    rollingParams:
+      updatePeriodSeconds: 1
+      intervalSeconds: 1
+      timeoutSeconds: 600
+      maxUnavailable: 25%
+      maxSurge: 25%
+  triggers:
+    - type: ConfigChange
+    - type: "ImageChange"
+      imageChangeParams:
+        automatic: true 
+        from:
+           kind: "ImageStreamTag"
+           name: "akshit-chadha-docker-poc:latest"
+           namespace: "achadha1995-dev"
+        containerNames:
+             - "java1"
+    				   
+	  
+	  
+	  
+	  
+	  
+	  
+	  after deployment you will face error 
+	  
+	  
+	  no main manifest attribute, in /app.jar error
+	  
+	  
+	  solution
+	  
+	  
+	  https://stackoverflow.com/questions/9689793/cant-execute-jar-file-no-main-manifest-attribute
+	  
+	  
+	  
+	  
+24) imagestream example
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  name: akshit-chadha-docker-poc
+  namespace: achadha1995-dev	  
+  
+  
+  
+  
+25) service 
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: java-poc-service      
+spec:
+  selector:                  
+    app: java1
+     
+  ports:
+  - name: 8080-tcp
+    port: 8081               
+    protocol: TCP
+    targetPort: 8081        
+	
+	
+	
+	
+26)
+
+
+FROM openjdk:8-jdk-alpine
+ARG JAR_FILE=target/*.jar
+COPY ${JAR_FILE} app.jar
+ENTRYPOINT ["java","-jar","/app.jar"]
